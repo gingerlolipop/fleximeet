@@ -3,35 +3,16 @@ let userPasswords = {};
 
 function generateCalendar() {
     const calendar = document.getElementById('calendar');
-    const dates = [];
-    const vancouverOffset = -8; // Standard Time offset for Vancouver (UTC-8)
-    // Consider adjusting for Daylight Saving Time if necessary
-
-    // Function to adjust date to Vancouver time
-    function adjustForTimezone(date) {
-        return new Date(date.getTime() + vancouverOffset * 60 * 60 * 1000);
-    }
-
-    // Add weekdays for January 10-13, 2024
-    for (let day = 11; day <= 13; day++) {
-        let date = new Date(2024, 0, day); // January 2024
-        date = adjustForTimezone(date);
-        if (date.getDay() >= 1 && date.getDay() <= 5) { // Include only Monday to Friday
-            dates.push(date.toISOString().split('T')[0]);
-        }
-    }
-
-    
-    // Add weekdays for March 1-31, 2024
-    for (let day = 1; day <= 32; day++) {
-        let date = new Date(2024, 2, day); // March 2024
-        date = adjustForTimezone(date);
-        if (date.getDay() >= 1 && date.getDay() <= 5) { // Include only Monday to Friday
-            dates.push(date.toISOString().split('T')[0]);
-        }
-    }
+    // Corrected dates, including the correct weekdays
+    const dates = [
+        '2024-01-11', // January 11, 2024 (Thursday)
+        '2024-01-12', // January 12, 2024 (Friday)
+        '2024-03-01', '2024-03-04', '2024-03-05', '2024-03-06', '2024-03-07', '2024-03-08', // March 1 and 4-8, 2024 (Weekdays)
+        '2024-03-11', '2024-03-12', '2024-03-13', '2024-03-14'  // March 11-14, 2024 (Weekdays)
+    ];
 
     const times = [];
+    // Generate 30-minute time slots from 9:00 AM to 6:30 PM
     for (let hour = 9; hour < 19; hour++) {
         times.push(`${hour}:00`, `${hour}:30`);
     }
@@ -41,13 +22,17 @@ function generateCalendar() {
     const headerRow = document.createElement('tr');
     const firstCell = document.createElement('th');
     headerRow.appendChild(firstCell);
+
     dates.forEach(dateString => {
-        let date = new Date(dateString);
-        date = adjustForTimezone(date);
+        const date = new Date(dateString);
         const dateHeader = document.createElement('th');
         dateHeader.textContent = `${date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
         headerRow.appendChild(dateHeader);
+
+        // Log the date string and its corresponding Date object
+        console.log(dateString, date.toString());
     });
+    
     table.appendChild(headerRow);
 
     // Create rows for each time slot
@@ -70,7 +55,6 @@ function generateCalendar() {
 
     calendar.appendChild(table);
 }
-
 
 
 function setupDragSelect() {
@@ -126,7 +110,7 @@ document.getElementById('submit').addEventListener('click', () => {
 
 function displayAllAvailability() {
     const resultsDiv = document.getElementById('availability-results');
-    resultsDiv.innerHTML = '<h3>Combined Availability</h3>';
+    resultsDiv.innerHTML = '<h3>Availability</h3>';
     const table = document.createElement('table');
     for (const [userName, slots] of Object.entries(allAvailability)) {
         const row = document.createElement('tr');
