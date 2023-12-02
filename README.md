@@ -1,3 +1,3 @@
 # fleximeet
-flexible dates availability across months
+Scheduling tool that supports flexible dates across months
 
